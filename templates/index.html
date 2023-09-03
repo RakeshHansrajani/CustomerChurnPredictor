@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Customer Churn Predictor tool</title>
+</head>
+
+<body>
+    <h1>Customer Churn Predictor tool</h1>
+    <form id="prediction-form" action="{{ url_for('predict')}}" method="post">
+
+      <label for="Age" colo>Age:  </label>
+      <input type="text" name="Age" placeholder="Age" required="required">
+      <br>
+      <br>
+
+      <label for="Gender">Gender:  </label>
+      <select id="Gender" name="Gender" placeholder="Gender", required="required">
+        <option value="0">Male</option>
+        <option value="1">Female</option>
+      </select>
+      <br>
+      <br>
+
+      <label for="Location">Location:  </label>
+      <select id="Location" name="Location", placeholder="Location", required="required">
+        <option value="Houston">Houston</option>
+        <option value="Los Angeles">Los Angeles</option>
+        <option value="Miami">Miami</option>
+        <option value="Chicago">Chicago</option>
+        <option value="New York">New York</option>
+      </select>
+      <br>
+      <br>
+
+      <label for="Subscription_Length_Months">Subscription_Length_Months:  </label>
+      <input type="Subscription_Length_Months" name="Subscription_Length_Months" placeholder="Subscription_Length_Months" required="required">
+      <br>
+      <br>
+
+     <label for="Monthly_Bill">Monthly_Bill:  </label>
+      <input type="Monthly_Bill" name="Monthly_Bill" placeholder="Monthly_Bill" required="required">
+      <br>
+      <br>
+
+     <label for="Total_Usage_GB">Total_Usage_GB:  </label>
+      <input type="Total_Usage_GB" name="Total_Usage_GB" placeholder="Total_Usage_GB" required="required">
+      <br>
+      <br>
+	<input type="submit" value="Will Customer Churn?">
+    </form>
+
+    <h2>Prediction Result:</h2>
+    <p id="prediction-result"></p>
+
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const Age = document.getElementById("Age").value;
+            const Gender = document.getElementById("Gender").value;
+            const Location = document.getElementById("Location").value;
+            const Subscription_Length_Months= document.getElementById("Subscription_Length_Months").value;
+            const Monthly_Bill= document.getElementById("Monthly_Bill").value;
+            const Total_Usage_GB = document.getElementById("Total_Usage_GB").value;
+
+            const data = {
+                "Age": Age,
+                "Gender": Gender,
+		"Location": Location,
+		"Subscription_Length_Months": Subscription_Length_Months,
+		"Monthly_Bill": Monthly_Bill,
+		"Total_Usage_GB": Total_Usage_GB
+            };
+
+            fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("prediction-result").innerText = "Prediction: " + result.prediction;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
